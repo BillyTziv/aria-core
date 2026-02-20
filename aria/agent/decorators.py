@@ -36,7 +36,8 @@ def tool(
         wrapper._capability_name = cap_name  # type: ignore[attr-defined]
         wrapper._tool_description = description or fn.__doc__ or ""  # type: ignore[attr-defined]
         wrapper._tool_parameters = parameters or {}  # type: ignore[attr-defined]
-        wrapper._requires_human_approval = False  # type: ignore[attr-defined]
+        # Preserve @requires_human_approval if it was applied to the inner function
+        wrapper._requires_human_approval = getattr(fn, "_requires_human_approval", False)  # type: ignore[attr-defined]
         return wrapper
 
     return decorator
